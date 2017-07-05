@@ -56,6 +56,9 @@ nav a:active {
   nav {
     display: none;
   }
+  #centerPanel {
+    padding: 3vw;
+  }
 }
 
 
