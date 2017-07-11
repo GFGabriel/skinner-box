@@ -1,0 +1,16 @@
+<div><label>Gas Level</label> {{gameState.gasLevel.toFixed(3)}}%</div>
+
+<div><label>Gas Level Increasing By</label> {{gameState.increasedBy.toFixed(3)}}% per second</div>
+
+<button (click)="ventGas()">Vent Gas</button> {{gameState.ventLevel.toFixed(2)}}%
+<p>{{gameState.resources}}</p>
+<div class="upgradeArray">
+  <div class="cleaners">
+  </div>
+  <div class="upgrades">
+    <button (click)="increaseFilter()">Increase Filter Power</button> {{gameState.filterCost}}
+    <p>Filter Level: {{gameState.filtersOwned}}</p>
+    <button (click)="increaseAuto()">Add Auto Filter</button> {{gameState.autoCost}}
+    <p>Auto Filters Owned: {{gameState.autoOwned}}</p>
+  </div>
+</div>
