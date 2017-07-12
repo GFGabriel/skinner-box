@@ -1,0 +1,54 @@
+nav,
+.panel {
+  display: flex;
+}
+
+nav a,
+.panel > div {
+  box-sizing: border-box;
+  width: 33.33%;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  text-align: center;
+  border: 2px solid #333;
+}
+
+nav a:active {
+  font-weight: 700;
+}
+
+.panel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  height: 80%;
+}
+
+.panel {
+  width: 300%;
+  height: 100%;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (orientation: portrait) {
+  .panel-wrapper {
+    height: 83.5%;
+  }
+}
+@media screen and (min-width: 1024px) and (orientation: landscape) {
+  .panel {
+    width: 100%
+  }
+  nav {
+    display: none;
+  }
+  #centerPanel {
+    padding: 3vw;
+  }
+}
