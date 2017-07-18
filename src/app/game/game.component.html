@@ -6,35 +6,47 @@
 
 <div class="panel-wrapper" *ngIf="gameState">
   <div [ngClass]="{centered: isCentered}" class="panel">
-    <div *ngIf="gameState.secondGame === true" id="leftPanel">
-      <h2>Left Panel</h2>
-      <!--Build second game chamber here-->
-      <!--<swarm-chamber [gameState="gameState"></swarm-chamber>-->
-    </div>
-    <div id="centerPanel">
-      <!--Move back to gas chamber component once sharing is figured out-->
-      <!--<gas-chamber [gameState="gameState"></swarm-chamber>-->
-
-      <div><label>Gas Level</label> {{gameState.gasLevel.toFixed(3)}}%</div>
-
-      <div><label>Gas Level Increasing By</label> {{gameState.increasedBy.toFixed(3)}}% per second</div>
-
-      <button (click)="ventGas()">Vent Gas</button> {{gameState.ventAmount.toFixed(2)}}%
-      <p>{{gameState.resources}}</p>
-      <div class="upgradeArray">
-        <div class="cleaners">
-        </div>
-        <div class="upgrades">
-          <button (click)="increaseFilter()">Increase Filter Power</button> {{gameState.filterCost}}
-          <p>Filter Level: {{gameState.filtersOwned}}</p>
-          <button (click)="increaseAuto()">Add Auto Filter</button> {{gameState.autoCost}}
-          <p>Auto Filters Owned: {{gameState.autoOwned}}</p>
-        </div>
+    <div id="leftPanel" class="singlePanel">
+      <div class="cloneRoom" *ngIf="gameState.secondGame === true">
+        <div *ngIf="gameState.scoutsOn === true"><button (click)="createScout()">Create Scout: 10000 Builders</button><button (click)="createScoutAll()">Create Max</button>
+          <label>Scouts: </label>{{gameState.scouts}} </div>
+        <div *ngIf="gameState.buildersOn === true"><button (click)="createBuilder()">Create Builder: 1000 Gatherers</button><button (click)="createBuilderAll()">Create Max</button>
+          <label>Builders: </label>{{gameState.builders}} </div>
+        <div *ngIf="gameState.gatherersOn === true"><button (click)="createGatherer()">Create Gatherer: 100 Farmers</button><button (click)="createGathererAll()">Create Max</button>
+          <label>Gatherers: </label>{{gameState.gatherers}} </div>
+        <div><button (click)="createFarmer()">Create Farmer: 10 Food</button><button (click)="createFarmerAll()">Create Max</button>
+          <label>Farmers: </label>{{gameState.farmers}} </div>
+        <div><label>Food Available: </label>{{gameState.foodAvailable}}</div>
+        <div><button (click)="upgradeClones()">Upgrade: {{gameState.cloneUpgradeCost}} Resources</button><label>Clones Available: </label>{{gameState.clonesAvailable}}</div>
+        <div *ngIf="gameState.secondGame === true"></div>
       </div>
     </div>
-    <div *ngIf="gameState.thirdGame" id="rightPanel">
-      <h2>Right Panel</h2>
-      <!--<battle-chamber [gameState="gameState"></battle-chamber>-->
+    <div id="centerPanel" class="singlePanel">
+      <div class="gasChamber">
+        <div><label>Gas Level</label> {{gameState.gasLevel.toFixed(3)}}%</div>
+
+        <div><label>Gas Level Increasing By</label> {{gameState.increasedBy.toFixed(3)}}% per second</div>
+
+        <button (click)="ventGas()">Vent Gas</button> {{gameState.ventAmount.toFixed(2)}}%
+        <p>{{gameState.resources}} Resources Available</p>
+        <div class="upgradeArray">
+          <div class="cleaners">
+          </div>
+          <div class="upgrades">
+            <button (click)="increaseFilter()">Increase Filter Power</button> {{gameState.filterCost}} Resources
+            <p>Filter Level: {{gameState.filtersOwned}}</p>
+            <button (click)="increaseAuto()">Add Auto Filter</button> {{gameState.autoCost}} Resources
+            <p>Auto Filters Owned: {{gameState.autoOwned}}</p>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div id="rightPanel" class="singlePanel">
+      <div *ngIf="gameState.thirdGame" class="battleChamber">
+        <div (click)="damageEnemy()" class="enemyBox">Enemy Health: {{gameState.enemyHealth}}</div>
+      </div>
     </div>
   </div>
 </div>

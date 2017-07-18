@@ -55,18 +55,18 @@ static intervalId: Number;
   }
 
   changeGasPercentage(): void {
-    console.log(this.gameState.gasLevel);
+    // console.log(this.gameState.gasLevel);
     this.gameState.increasedBy = ((100 - this.gameState.gasLevel) * .02);
   }
 
   ventGas(): void {
-    console.log('venting gas');
+    // console.log('venting gas');
     this.gameState.gasLevel -= this.gameState.ventAmount;
     this.gameState.resources += 1;
   }
 
   increaseGas(): void {
-    console.log('increasing gas');
+    // console.log('increasing gas');
     this.gameState.gasLevel += this.gameState.increasedBy;
     this.changeGasPercentage();
   }
@@ -74,9 +74,22 @@ static intervalId: Number;
   decreaseGas(): void {
     this.gameState.gasLevel -= (this.gameState.ventAmount * this.gameState.autoOwned);
     this.gameState.resources += this.gameState.autoOwned;
-    if (this.gameState.gasLevel < 80) {
+    if (this.gameState.gasLevel < 99 && this.gameState.secondGame === false) {
       this.gameState.secondGame = true;
+      this.gameState.clonesAvailable = 0;
+      this.gameState.foodAvailable = 50;
+      this.gameState.farmers = 0;
+      this.gameState.gatherers = 0;
+      this.gameState.builders = 0;
+      this.gameState.scouts = 0;
+      this.gameState.cloneUpgrade = 1;
+      this.gameState.cloneUpgradeCost = 300;
       this.isCentered = false;
+      this.startClones();
+      this.increaseFood();
+      this.increaseFarmers();
+      this.increaseGatherers();
+      this.increaseBuilders();
       console.log('Starting second game');
     }
   }
@@ -87,6 +100,9 @@ static intervalId: Number;
   // }
 
   startInterval(): void {
+    if (this.gameState.secondGame !== false) {
+      this.gameState.isCentered = true;
+    }
     // if (GasComponent.intervalId) {
     //   window.clearInterval(this.intervalId);
     // }
@@ -102,7 +118,7 @@ static intervalId: Number;
       this.gameState.filtersOwned += 1;
       this.gameState.resources -= this.gameState.filterCost;
       this.gameState.filterCost = Math.round(10 * Math.pow(1.07, this.gameState.filtersOwned));
-      console.log('filters owned', this.gameState.filtersOwned, 'filter cost', this.gameState.filterCost);
+      // console.log('filters owned', this.gameState.filtersOwned, 'filter cost', this.gameState.filterCost);
     } else {
       alert('Not enough resources');
     }
@@ -117,6 +133,161 @@ static intervalId: Number;
       alert('Not enough resources');
     }
   }
+
+  startClones(): void {
+    GameComponent.intervalId = window.setInterval(() => {
+        this.gameState.clonesAvailable += this.gameState.cloneUpgrade;
+      }, 1000);
+  }
+
+  createFarmer(): void {
+  if (this.gameState.foodAvailable >= 10 && this.gameState.clonesAvailable >= 1) {
+    this.gameState.foodAvailable -= 10;
+    this.gameState.farmers += 1;
+    this.gameState.clonesAvailable -= 1;
+    this.gameState.gatherersOn = true;
+  }
+}
+
+  createFarmerAll(): void {
+    let all = Math.floor(this.gameState.foodAvailable / 10);
+    if (all > this.gameState.clonesAvailable) {
+      all = this.gameState.clonesAvailable
+    }
+    this.gameState.farmers += all;
+    this.gameState.foodAvailable -= (all * 10);
+    this.gameState.clonesAvailable -= all;
+    this.gameState.gatherersOn = true;
+  }
+
+  createGatherer(): void {
+    if (this.gameState.farmers >= 10 && this.gameState.clonesAvailable >= 1) {
+      this.gameState.farmers -= 10;
+      this.gameState.gatherers += 1;
+      this.gameState.clonesAvailable -= 1;
+      this.gameState.buildersOn = true;
+    }
+  }
+
+  createGathererAll(): void {
+    let all = Math.floor(this.gameState.farmers / 10);
+    if (all > this.gameState.clonesAvailable) {
+      all = this.gameState.clonesAvailable
+    }
+    this.gameState.gatherers += all;
+    this.gameState.farmers -= (all * 10);
+    this.gameState.clonesAvailable -= all;
+    this.gameState.buildersOn = true;
+  }
+
+  createBuilder(): void {
+    if (this.gameState.gatherers >= 10 && this.gameState.clonesAvailable >= 1) {
+      this.gameState.gatherers -= 10;
+      this.gameState.builders += 1;
+      this.gameState.clonesAvailable -= 1;
+      this.gameState.scoutsOn = true;
+    }
+  }
+
+  createBuilderAll(): void {
+    let all = Math.floor(this.gameState.gatherers / 10);
+    if (all > this.gameState.clonesAvailable) {
+      all = this.gameState.clonesAvailable
+    }
+    this.gameState.builders += all;
+    this.gameState.gatherers -= (all * 10);
+    this.gameState.clonesAvailable -= all;
+    this.gameState.scoutsOn = true;
+  }
+
+  createScout(): void {
+    if (this.gameState.builders >= 10 && this.gameState.clonesAvailable >= 1) {
+      this.gameState.builders -= 10;
+      this.gameState.scouts += 1;
+      this.gameState.clonesAvailable -= 1;
+      this.gameState.thirdGame = true;
+    }
+  }
+
+  createScoutAll(): void {
+    let all = Math.floor(this.gameState.builders / 10);
+    if (all > this.gameState.clonesAvailable) {
+      all = this.gameState.clonesAvailable
+    }
+    this.gameState.scouts += all;
+    this.gameState.builders -= (all * 10);
+    this.gameState.clonesAvailable -= all;
+    this.gameState.thirdGame = true;
+  }
+
+  increaseFood(): void {
+    let timer = 0;
+    GameComponent.intervalId = window.setInterval(() => {
+      if ( this.gameState.farmers < 10 ) {
+        timer += 1;
+        if (timer >= 10) {
+          this.gameState.foodAvailable += this.gameState.farmers;
+          timer = 0;
+        }
+      } else {
+        this.gameState.foodAvailable += Math.floor(this.gameState.farmers / 10);
+      }
+    }, 100);
+  }
+
+  increaseFarmers(): void {
+    let timer = 0;
+    GameComponent.intervalId = window.setInterval(() => {
+      if ( this.gameState.gatherers < 10 ) {
+        timer += 1;
+        if (timer >= 10) {
+          this.gameState.farmers += this.gameState.gatherers;
+          timer = 0;
+        }
+      } else {
+        this.gameState.farmers += Math.floor(this.gameState.gatherers / 10);
+      }
+    }, 100);
+  }
+
+  increaseGatherers(): void {
+    let timer = 0;
+    GameComponent.intervalId = window.setInterval(() => {
+      if ( this.gameState.builders < 10 ) {
+        timer += 1;
+        if (timer >= 10) {
+          this.gameState.gatherers += this.gameState.builders;
+          timer = 0;
+        }
+      } else {
+        this.gameState.gatherers += Math.floor(this.gameState.builders / 10);
+      }
+    }, 100);
+  }
+
+  increaseBuilders(): void {
+    let timer = 0;
+    GameComponent.intervalId = window.setInterval(() => {
+      if ( this.gameState.scouts < 10 ) {
+        timer += 1;
+        if (timer >= 10) {
+          this.gameState.builders += this.gameState.scouts;
+          timer = 0;
+        }
+      } else {
+        this.gameState.builders += Math.floor(this.gameState.scouts / 10);
+      }
+    }, 100);
+  }
+
+  upgradeClones(): void {
+    if (this.gameState.resources >= this.gameState.cloneUpgradeCost) {
+      this.gameState.resources -= this.gameState.cloneUpgradeCost;
+      this.gameState.cloneUpgrade = this.gameState.cloneUpgrade * 2;
+      this.gameState.cloneUpgradeCost = Math.floor(300 * Math.pow(1.07, this.gameState.cloneUpgrade));
+    }
+  }
+
   ngOnInit(): void {
       // this.gameService.getGameState().then(result => {
       //   console.log('the result is', result);

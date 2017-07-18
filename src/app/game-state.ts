@@ -13,4 +13,17 @@ export class GameState {
   secondGame: boolean;
   thirdGame: boolean;
   fourthGame: boolean;
+  clonesAvailable: number;
+  foodAvailable: number;
+  farmers: number;
+  gatherers: number;
+  builders: number;
+  scouts: number;
+  conquerers: number;
+  cloneUpgrade: number;
+  cloneUpgradeCost: number;
+  gatherersOn: boolean;
+  buildersOn: boolean;
+  scoutsOn: boolean;
+  conquerersOn: boolean;
 }

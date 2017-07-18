@@ -1,3 +1,7 @@
+@keyframes play {
+  100% { background-position: -17100px; }
+}
+
 nav,
 .panel {
   display: flex;
@@ -36,6 +40,17 @@ nav a:active {
   justify-content: center;
 }
 
+.singlePanel {
+  width: 33.33%;
+  height: 100%;
+}
+
+.enemyBox {
+  width: 450px;
+  height: 380px;
+  background: url('../../assets/MachineScorpion.png') left center;
+  animation: play 3.8s steps(38) infinite;
+}
 @media screen and (orientation: portrait) {
   .panel-wrapper {
     height: 83.5%;
